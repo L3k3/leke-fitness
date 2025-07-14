@@ -47,3 +47,27 @@ document.querySelectorAll('.add-set').forEach(button => {
     updateResult(exerciseDiv);
   });
 });
+
+// Clear all button
+document.getElementById('clear-all').addEventListener('click', () => {
+  localStorage.clear();
+  document.querySelectorAll('.result').forEach(result => {
+    result.textContent = 'Sets: 0 | Total reps: 0';
+  });
+});
+
+// Theme toggle
+const themeToggle = document.getElementById('theme-toggle');
+
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+});
+
+// Load saved theme
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light-mode');
+} else {
+  document.body.classList.add('dark-mode');
+}
