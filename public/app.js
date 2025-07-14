@@ -9,6 +9,7 @@ const exercises = [
 
 const container = document.getElementById('exercises-container');
 
+// Create exercises
 exercises.forEach(name => {
   const id = name.toLowerCase().replace(/\s+/g, '-');
 
@@ -26,6 +27,7 @@ exercises.forEach(name => {
   container.appendChild(exerciseDiv);
 });
 
+// Update result helper
 function updateResult(exerciseDiv) {
   const input = exerciseDiv.querySelector('input');
   const reps = parseInt(input.value, 10) || 0;
@@ -35,12 +37,12 @@ function updateResult(exerciseDiv) {
   result.textContent = `Sets: ${sets} | Total reps: ${total}`;
 }
 
-// Restore saved sets on load
-document.querySelectorAll('.exercise').forEach(updateResult);
+// Restore saved sets on load - FIX: use created elements!
+document.querySelectorAll('.exercise').forEach(exerciseDiv => {
+  updateResult(exerciseDiv);
 
-document.querySelectorAll('.add-set').forEach(button => {
+  const button = exerciseDiv.querySelector('.add-set');
   button.addEventListener('click', () => {
-    const exerciseDiv = button.closest('.exercise');
     let sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
     sets++;
     localStorage.setItem(exerciseDiv.dataset.exercise + '_sets', sets);
@@ -48,17 +50,17 @@ document.querySelectorAll('.add-set').forEach(button => {
   });
 });
 
-// Clear all button
+// Clear all
 document.getElementById('clear-all').addEventListener('click', () => {
-  localStorage.clear();
-  document.querySelectorAll('.result').forEach(result => {
-    result.textContent = 'Sets: 0 | Total reps: 0';
+  exercises.forEach(name => {
+    const id = name.toLowerCase().replace(/\s+/g, '-');
+    localStorage.removeItem(id + '_sets');
   });
+  document.querySelectorAll('.exercise').forEach(updateResult);
 });
 
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle');
-
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle('light-mode');
   document.body.classList.toggle('dark-mode');
