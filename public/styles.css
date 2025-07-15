@@ -33,14 +33,19 @@ button {
   margin-bottom: 30px;
 }
 
-.exercise {
-  flex: 1 1 250px;
-  background: var(--card-bg);
-  padding: 15px 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px var(--accent-color);
-  transition: background 0.3s;
+#exercises-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Controls spacing! */
 }
+
+.exercise {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00bcd4aa;
+}
+
 
 .exercise h3 {
   margin: 0 0 10px 0;
