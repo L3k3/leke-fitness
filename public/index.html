@@ -4,24 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Leke Fitness Tracker</title>
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>Leke Fitness Tracker</h1>
 
-  <div class="controls">
-    <button id="clear-all">Clear All</button>
-    <button id="theme-toggle">Toggle Light/Dark Mode</button>
-  </div>
+  <button id="clear-all">Clear All</button>
+  <button id="theme-toggle">Toggle Light/Dark Mode</button>
 
+  <!-- This is where exercises go -->
   <div id="exercises-container"></div>
 
   <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
 </body>
 </html>

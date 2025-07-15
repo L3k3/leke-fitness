@@ -30,15 +30,13 @@ exercises.forEach(name => {
 });
 
 function updateResult(exerciseDiv) {
-  const input = exerciseDiv.querySelector('input');
-  const reps = parseInt(input.value, 10) || 0;
   const sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
   const total = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_total') || '0', 10);
   const result = exerciseDiv.querySelector('.result');
   result.textContent = `Sets: ${sets} | Total reps: ${total}`;
 }
 
-// Restore saved sets on load
+// Restore saved data
 document.querySelectorAll('.exercise').forEach(updateResult);
 
 document.querySelectorAll('.add-set').forEach(button => {
@@ -58,13 +56,13 @@ document.querySelectorAll('.add-set').forEach(button => {
   });
 });
 
-// ✅ Add custom reps button
-document.querySelectorAll('.add-custom-set').forEach(button => {
-  button.addEventListener('click', () => {
-    const customReps = parseInt(prompt('How many reps for this set?'), 10);
+// ✅ Add custom reps
+document.addEventListener('click', e => {
+  if (e.target.matches('.add-custom-set')) {
+    const exerciseDiv = e.target.closest('.exercise');
+    let customReps = parseInt(prompt('How many reps for this set?'), 10);
     if (isNaN(customReps) || customReps <= 0) return;
 
-    const exerciseDiv = button.closest('.exercise');
     let sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
     let total = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_total') || '0', 10);
 
@@ -74,10 +72,10 @@ document.querySelectorAll('.add-custom-set').forEach(button => {
     localStorage.setItem(exerciseDiv.dataset.exercise + '_sets', sets);
     localStorage.setItem(exerciseDiv.dataset.exercise + '_total', total);
     updateResult(exerciseDiv);
-  });
+  }
 });
 
-// Clear all
+// ✅ Clear all
 document.getElementById('clear-all').addEventListener('click', () => {
   localStorage.clear();
   document.querySelectorAll('.result').forEach(result => {
@@ -85,7 +83,7 @@ document.getElementById('clear-all').addEventListener('click', () => {
   });
 });
 
-// Theme toggle
+// ✅ Theme toggle
 const themeToggle = document.getElementById('theme-toggle');
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle('light-mode');
@@ -93,7 +91,7 @@ themeToggle.addEventListener('click', () => {
   localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 });
 
-// Load saved theme
+// ✅ Load saved theme
 if (localStorage.getItem('theme') === 'light') {
   document.body.classList.add('light-mode');
 } else {
