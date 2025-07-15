@@ -1,11 +1,12 @@
 const exercises = [
   "Push-ups",
   "Pull-ups",
-  "Chin-ups",
-  "Bicep Curls",
-  "Tricep Extensions",
+  "Butterfly-Curls ",
+  "Bicep-Curls",
+  "Tricep-Extensions",
   "Squats",
-  "Lunges"
+  "Strand-Pulling",
+  "Weighted Lunges"
 ];
 
 const container = document.getElementById('exercises-container');
