@@ -1,66 +1,77 @@
 const exercises = [
-  { name: "Push-ups" },
-  { name: "Pull-ups" },
-  { name: "Chin-ups" },
-  { name: "Bicep Curls" },
-  { name: "Tricep Extensions" },
-  { name: "Squats" },
-  { name: "Lunges" }
-];
-
-// Grouped variations: Pull-ups + Chin-ups
-const groups = [
-  ["Push-ups"],
-  ["Pull-ups", "Chin-ups"],
-  ["Bicep Curls"],
-  ["Tricep Extensions"],
-  ["Squats"],
-  ["Lunges"]
+  "Push-ups",
+  "Pull-ups",
+  "Chin-ups",
+  "Bicep Curls",
+  "Tricep Extensions",
+  "Squats",
+  "Lunges"
 ];
 
 const container = document.getElementById('exercises-container');
 
-groups.forEach(group => {
-  const groupDiv = document.createElement('div');
-  groupDiv.classList.add('exercise-group');
+exercises.forEach(name => {
+  const id = name.toLowerCase().replace(/\s+/g, '-');
 
-  group.forEach(exercise => {
-    const id = exercise.toLowerCase().replace(/\s+/g, '-');
-    const exerciseDiv = document.createElement('div');
-    exerciseDiv.classList.add('exercise');
-    exerciseDiv.dataset.exercise = id;
+  const exerciseDiv = document.createElement('div');
+  exerciseDiv.classList.add('exercise');
+  exerciseDiv.dataset.exercise = id;
 
-    exerciseDiv.innerHTML = `
-      <h3>${exercise}</h3>
-      <input type="number" min="0" value="10" />
-      <button class="add-set">Add Set</button>
-      <div class="result">Sets: 0 | Total reps: 0</div>
-    `;
+  exerciseDiv.innerHTML = `
+    <h3>${name}</h3>
+    <input type="number" min="0" value="10" />
+    <button class="add-set">Add Set</button>
+    <button class="add-custom-set">Add Custom Reps</button>
+    <div class="result">Sets: 0 | Total reps: 0</div>
+  `;
 
-    groupDiv.appendChild(exerciseDiv);
-  });
-
-  container.appendChild(groupDiv);
+  container.appendChild(exerciseDiv);
 });
 
 function updateResult(exerciseDiv) {
   const input = exerciseDiv.querySelector('input');
   const reps = parseInt(input.value, 10) || 0;
   const sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
-  const total = sets * reps;
+  const total = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_total') || '0', 10);
   const result = exerciseDiv.querySelector('.result');
   result.textContent = `Sets: ${sets} | Total reps: ${total}`;
 }
 
-// Restore saved sets
+// Restore saved sets on load
 document.querySelectorAll('.exercise').forEach(updateResult);
 
 document.querySelectorAll('.add-set').forEach(button => {
   button.addEventListener('click', () => {
     const exerciseDiv = button.closest('.exercise');
     let sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
+    let total = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_total') || '0', 10);
+    const input = exerciseDiv.querySelector('input');
+    const reps = parseInt(input.value, 10) || 0;
+
     sets++;
+    total += reps;
+
     localStorage.setItem(exerciseDiv.dataset.exercise + '_sets', sets);
+    localStorage.setItem(exerciseDiv.dataset.exercise + '_total', total);
+    updateResult(exerciseDiv);
+  });
+});
+
+// ✅ Add custom reps button
+document.querySelectorAll('.add-custom-set').forEach(button => {
+  button.addEventListener('click', () => {
+    const customReps = parseInt(prompt('How many reps for this set?'), 10);
+    if (isNaN(customReps) || customReps <= 0) return;
+
+    const exerciseDiv = button.closest('.exercise');
+    let sets = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_sets') || '0', 10);
+    let total = parseInt(localStorage.getItem(exerciseDiv.dataset.exercise + '_total') || '0', 10);
+
+    sets++;
+    total += customReps;
+
+    localStorage.setItem(exerciseDiv.dataset.exercise + '_sets', sets);
+    localStorage.setItem(exerciseDiv.dataset.exercise + '_total', total);
     updateResult(exerciseDiv);
   });
 });
@@ -75,17 +86,10 @@ document.getElementById('clear-all').addEventListener('click', () => {
 
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle');
-
 themeToggle.addEventListener('click', () => {
-  if (document.body.classList.contains('light-mode')) {
-    document.body.classList.remove('light-mode');
-    document.body.classList.add('dark-mode');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    document.body.classList.remove('dark-mode');
-    document.body.classList.add('light-mode');
-    localStorage.setItem('theme', 'light');
-  }
+  document.body.classList.toggle('light-mode');
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 });
 
 // Load saved theme
