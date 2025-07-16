@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Leke Fitness Tracker</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#00bcd4" />
 </head>
+
 <body>
   <h1>Leke Fitness Tracker</h1>
 
@@ -16,5 +19,13 @@
   <div id="exercises-container"></div>
 
   <script src="app.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('✅ Service Worker registered'))
+      .catch(error => console.error('❌ Service Worker error:', error));
+  }
+</script>
+
 </body>
 </html>
