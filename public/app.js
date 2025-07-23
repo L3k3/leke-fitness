@@ -1,7 +1,7 @@
 const exercises = [
   "Push-ups",
   "Pull-ups",
-  "Butterfly-Curls ",
+  "Butterfly-Curls",
   "Bicep-Curls",
   "Tricep-Extensions",
   "Squats",
@@ -36,8 +36,21 @@ function updateResult(exerciseDiv) {
   result.textContent = `Sets: ${sets} | Total reps: ${total}`;
 }
 
-// Restore saved data
-document.querySelectorAll('.exercise').forEach(updateResult);
+// ✅ Restore saved sets/totals + reps input!
+document.querySelectorAll('.exercise').forEach(exerciseDiv => {
+  updateResult(exerciseDiv);
+
+  // ✅ REPS: load saved value
+  const input = exerciseDiv.querySelector('input');
+  const repsKey = exerciseDiv.dataset.exercise + '_reps';
+  const savedReps = localStorage.getItem(repsKey);
+  if (savedReps) input.value = savedReps;
+
+  // ✅ REPS: save when changed
+  input.addEventListener('input', () => {
+    localStorage.setItem(repsKey, input.value);
+  });
+});
 
 document.querySelectorAll('.add-set').forEach(button => {
   button.addEventListener('click', () => {
@@ -81,6 +94,8 @@ document.getElementById('clear-all').addEventListener('click', () => {
   document.querySelectorAll('.result').forEach(result => {
     result.textContent = 'Sets: 0 | Total reps: 0';
   });
+  // ✅ Also clear all reps inputs
+  document.querySelectorAll('.exercise input').forEach(input => input.value = 10);
 });
 
 // ✅ Theme toggle
